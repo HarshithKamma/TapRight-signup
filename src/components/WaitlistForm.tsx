@@ -136,7 +136,9 @@ export function WaitlistForm() {
 
       const payload = await response.json();
       setStatus("success");
-      setMessage(payload?.message ?? "You are on the list!");
+      setMessage(
+        payload?.message ?? "Great news—you're in! Keep an eye on your inbox for next steps.",
+      );
       setFormState(initialState);
       setErrors(initialErrors);
     } catch (error) {

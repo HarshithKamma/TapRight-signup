@@ -67,9 +67,26 @@ export async function POST(request: NextRequest) {
     const twilioSid = process.env.TWILIO_ACCOUNT_SID;
     const twilioToken = process.env.TWILIO_AUTH_TOKEN;
     const twilioFrom = process.env.TWILIO_FROM_PHONE;
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseTable = process.env.SUPABASE_WAITLIST_TABLE || "waitlist_signups";
+    const alertEmail = process.env.WAITLIST_ALERT_EMAIL;
+
+    if (!resendKey) {
+      console.error("Waitlist submission blocked: RESEND_API_KEY is not configured.");
+      return NextResponse.json(
+        {
+          message:
+            "Our confirmation email service is not configured. Please try again soon while we finish setup.",
+        },
+        { status: 500 },
+      );
+    }
 
     let emailResult: "sent" | "skipped" | "failed" = "skipped";
     let smsResult: "sent" | "skipped" | "failed" = "skipped";
+    let supabaseResult: "synced" | "skipped" | "failed" = "skipped";
+    let alertResult: "sent" | "skipped" | "failed" = "skipped";
 
     const tasks: Array<Promise<void>> = [];
 
@@ -126,6 +143,69 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (supabaseUrl && supabaseServiceKey && supabaseTable) {
+      tasks.push(
+        fetch(`${supabaseUrl.replace(/\/$/, "")}/rest/v1/${encodeURIComponent(supabaseTable)}`, {
+          method: "POST",
+          headers: {
+            apikey: supabaseServiceKey,
+            Authorization: `Bearer ${supabaseServiceKey}`,
+            "Content-Type": "application/json",
+            Prefer: "return=minimal",
+          },
+          body: JSON.stringify({
+            full_name: payload.fullName,
+            email: payload.email,
+            phone: payload.phoneNumber,
+            spend_focus: payload.spendFocus,
+            notes: payload.notes ?? "",
+            opt_in: payload.optIn,
+            joined_at: new Date().toISOString(),
+          }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              return response.text().then((text) => {
+                throw new Error(text || `Supabase sync failed with status ${response.status}`);
+              });
+            }
+            supabaseResult = "synced";
+          })
+          .catch((error: unknown) => {
+            console.error("Failed to sync waitlist to Supabase", error);
+            supabaseResult = "failed";
+          }),
+      );
+    }
+
+    if (resendKey && alertEmail) {
+      const resend = new Resend(resendKey);
+      tasks.push(
+        resend.emails
+          .send({
+            from: "TapRight Waitlist <waitlist@tapright.ai>",
+            to: alertEmail,
+            subject: `New waitlist signup — ${payload.fullName}`,
+            text: [
+              `Name: ${payload.fullName}`,
+              `Email: ${payload.email}`,
+              `Phone: ${payload.phoneNumber}`,
+              `Spend focus: ${payload.spendFocus}`,
+              `Notes: ${payload.notes || "—"}`,
+              `Opted in: ${payload.optIn ? "Yes" : "No"}`,
+              `Joined at: ${new Date().toISOString()}`,
+            ].join("\n"),
+          })
+          .then(() => {
+            alertResult = "sent";
+          })
+          .catch((error: unknown) => {
+            console.error("Failed to send internal waitlist alert", error);
+            alertResult = "failed";
+          }),
+      );
+    }
+
     if (tasks.length > 0) {
       await Promise.allSettled(tasks);
     }
@@ -136,13 +216,17 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
       emailResult,
       smsResult,
+      supabaseResult,
+      alertResult,
     });
 
     return NextResponse.json({
       message:
-        "You are on the list! Expect a welcome email with your access timeline soon.",
+        "Great news—you're in! Check your inbox in a few minutes for your welcome note.",
       emailResult,
       smsResult,
+      supabaseResult,
+      alertResult,
     });
   } catch (error) {
     console.error("Unexpected waitlist error", error);
