@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { Resend } from "resend";
-import twilio from "twilio";
 
 export const runtime = "nodejs";
 
@@ -48,9 +47,6 @@ export async function POST(request: NextRequest) {
     const payload: WaitlistPayload = parsed.data;
 
     const resendKey = process.env.RESEND_API_KEY;
-    const twilioSid = process.env.TWILIO_ACCOUNT_SID;
-    const twilioToken = process.env.TWILIO_AUTH_TOKEN;
-    const twilioFrom = process.env.TWILIO_FROM_PHONE;
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     const supabaseTable = process.env.SUPABASE_WAITLIST_TABLE || "waitlist_signups";
@@ -68,7 +64,7 @@ export async function POST(request: NextRequest) {
     }
 
     let emailResult: "sent" | "skipped" | "failed" = "skipped";
-    let smsResult: "sent" | "skipped" | "failed" = "skipped";
+    const smsResult: "sent" | "skipped" | "failed" = "skipped";
     let supabaseResult: "synced" | "skipped" | "failed" = "skipped";
     let alertResult: "sent" | "skipped" | "failed" = "skipped";
 
@@ -79,7 +75,7 @@ export async function POST(request: NextRequest) {
       tasks.push(
         resend.emails
           .send({
-            from: "TapRight Waitlist <waitlist@tapright.ai>",
+            from: "TapRight Waitlist <info@tapright.app>",
             to: payload.email,
             subject: "You're on the TapRight waitlist ✅",
             text: [
@@ -149,7 +145,7 @@ export async function POST(request: NextRequest) {
       tasks.push(
         resend.emails
           .send({
-            from: "TapRight Waitlist <waitlist@tapright.ai>",
+            from: "TapRight Waitlist <info@tapright.app>",
             to: alertEmail,
             subject: `New waitlist signup — ${payload.fullName}`,
             text: [
