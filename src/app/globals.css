@@ -270,23 +270,29 @@ img {
 
 .hero-brand {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: clamp(0.75rem, 1.5vw, 1rem);
   margin-bottom: clamp(0.5rem, 1vw, 1rem);
   width: 100%;
   text-align: center;
+  position: relative;
 }
 
 .hero-logo {
   width: auto;
-  height: clamp(3.5rem, 7vw, 7rem);
+  height: clamp(5.5rem, 13vw, 11rem);
   transition: transform 0.3s ease, filter 0.3s ease;
-  position: relative;
+  position: absolute;
+  right: calc(50% + clamp(5.5rem, 11vw, 9rem));
+  top: calc(50% - clamp(0.5rem, 1vw, 1rem));
+  transform: translateY(-50%);
   filter: brightness(1.05) contrast(1.05);
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
   object-fit: contain;
+  z-index: 2;
 }
 
 .hero-logo::after {
@@ -319,6 +325,10 @@ img {
   -webkit-text-fill-color: transparent;
   margin: 0;
   line-height: 1;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
 }
 
 .hero-headline {
@@ -753,12 +763,9 @@ img {
 .use-cases {
   position: relative;
   z-index: 2;
-  padding: clamp(2.5rem, 5vw, 3.5rem) clamp(1rem, 5vw, 4.5rem);
+  padding: clamp(2.5rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 4.5rem);
   max-width: 1200px;
   margin: 0 auto;
-  overflow-x: hidden;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .use-cases-title {
@@ -786,24 +793,19 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(2rem, 6vw, 5rem);
+  gap: clamp(3rem, 6vw, 5rem);
   position: relative;
-  min-height: clamp(400px, 70vw, 600px);
-  overflow-x: hidden;
-  width: 100%;
-  padding: 0 1rem;
-  box-sizing: border-box;
+  min-height: 600px;
 }
 
 .category-circle {
   position: relative;
-  width: clamp(320px, 65vw, 650px);
-  height: clamp(320px, 65vw, 650px);
+  width: clamp(500px, 65vw, 650px);
+  height: clamp(500px, 65vw, 650px);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  max-width: 100%;
 }
 
 .category-circle-center {
@@ -811,8 +813,8 @@ img {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: clamp(100px, 20vw, 200px);
-  height: clamp(100px, 20vw, 200px);
+  width: clamp(150px, 20vw, 200px);
+  height: clamp(150px, 20vw, 200px);
   background: linear-gradient(135deg, rgba(92, 242, 255, 0.15), rgba(63, 130, 255, 0.1));
   border: 2px solid rgba(92, 242, 255, 0.3);
   border-radius: 50%;
@@ -820,7 +822,7 @@ img {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.4rem, 1vw, 0.9rem);
+  gap: clamp(0.6rem, 1vw, 0.9rem);
   z-index: 2;
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 32px rgba(92, 242, 255, 0.2);
@@ -863,8 +865,8 @@ img {
 }
 
 .category-button {
-  width: clamp(70px, 15vw, 150px);
-  height: clamp(70px, 15vw, 150px);
+  width: clamp(110px, 15vw, 150px);
+  height: clamp(110px, 15vw, 150px);
   background: rgba(12, 18, 42, 0.9);
   border: 2px solid rgba(92, 242, 255, 0.25);
   border-radius: 50%;
@@ -872,7 +874,7 @@ img {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.3rem, 0.8vw, 0.75rem);
+  gap: clamp(0.5rem, 0.8vw, 0.75rem);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(10px);
@@ -912,12 +914,11 @@ img {
 
 .scenario-tooltip {
   position: absolute;
-  width: clamp(240px, 85vw, 380px);
-  max-width: calc(100vw - 2rem);
+  width: clamp(280px, 35vw, 380px);
   background: rgba(12, 18, 42, 0.95);
   border: 1px solid rgba(92, 242, 255, 0.3);
   border-radius: 16px;
-  padding: clamp(0.85rem, 1.5vw, 1.25rem);
+  padding: clamp(1rem, 1.5vw, 1.25rem);
   backdrop-filter: blur(20px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
   z-index: 100;
@@ -1770,7 +1771,7 @@ textarea {
 
 @media (max-width: 768px) {
   .hero-logo {
-    height: clamp(3rem, 8vw, 4rem);
+    height: clamp(5rem, 12vw, 6.5rem);
   }
 
   .hero-title {
@@ -1839,7 +1840,7 @@ textarea {
   }
 
   .hero-logo {
-    height: clamp(2.5rem, 9vw, 3.5rem);
+    height: clamp(4.5rem, 13vw, 6rem);
   }
 
   .hero-title {
@@ -1907,7 +1908,7 @@ textarea {
 
 @media (max-width: 480px) {
   .hero-logo {
-    height: clamp(2rem, 10vw, 3rem);
+    height: clamp(4rem, 14vw, 5.5rem);
   }
 
   .hero-title {
@@ -1939,46 +1940,45 @@ textarea {
   }
 
   .category-circle {
-    width: clamp(280px, 85vw, 400px);
-    height: clamp(280px, 85vw, 400px);
+    width: clamp(400px, 90vw, 500px);
+    height: clamp(400px, 90vw, 500px);
   }
 
   .category-circle-center {
-    width: clamp(80px, 18vw, 150px);
-    height: clamp(80px, 18vw, 150px);
-    gap: clamp(0.3rem, 0.8vw, 0.6rem);
+    width: clamp(120px, 20vw, 180px);
+    height: clamp(120px, 20vw, 180px);
+    gap: clamp(0.5rem, 1vw, 0.9rem);
   }
 
   .category-center-icon {
-    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-size: clamp(2rem, 4vw, 3rem);
   }
 
   .category-center-text {
-    font-size: clamp(0.75rem, 1.2vw, 1rem);
+    font-size: clamp(0.9rem, 1.3vw, 1.2rem);
   }
 
   .category-button {
-    width: clamp(60px, 12vw, 110px);
-    height: clamp(60px, 12vw, 110px);
-    gap: clamp(0.25rem, 0.6vw, 0.5rem);
+    width: clamp(85px, 14vw, 130px);
+    height: clamp(85px, 14vw, 130px);
+    gap: clamp(0.4rem, 0.7vw, 0.6rem);
   }
 
   .category-button-icon {
-    font-size: clamp(1.25rem, 2.5vw, 2rem);
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
   }
 
   .category-button-label {
-    font-size: clamp(0.65rem, 1vw, 0.85rem);
+    font-size: clamp(0.75rem, 1.1vw, 0.95rem);
   }
 
   .scenario-tooltip {
-    width: clamp(220px, 90vw, 320px);
-    padding: clamp(0.75rem, 2vw, 1rem);
+    width: clamp(260px, 80vw, 360px);
+    padding: clamp(0.9rem, 1.5vw, 1.15rem);
   }
 
   .use-cases-container {
-    min-height: clamp(350px, 75vw, 500px);
-    padding: 0 0.5rem;
+    min-height: clamp(450px, 85vw, 550px);
   }
 
   .orb-one,

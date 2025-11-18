@@ -60,8 +60,8 @@ export default function Home() {
   const getRadius = () => {
     if (typeof window === 'undefined') return 200; // Default during SSR
     const width = window.innerWidth;
-    if (width < 480) return 90;
-    if (width < 768) return 120;
+    if (width < 480) return 140;
+    if (width < 768) return 170;
     return 200;
   };
 
@@ -78,8 +78,8 @@ export default function Home() {
             <Image
               src="/tapright-final-logo.png"
               alt="TapRight logo"
-              width={170}
-              height={170}
+              width={260}
+              height={260}
               className="hero-logo"
               priority
             />
