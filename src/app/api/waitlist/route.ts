@@ -8,10 +8,6 @@ export const runtime = "nodejs";
 const waitlistSchema = z.object({
   fullName: z.string().min(2, "Full name is required."),
   email: z.string().email("Enter a valid email address."),
-  phoneNumber: z
-    .string()
-    .min(8, "Add a valid phone number with country code.")
-    .max(32, "Phone numbers should be shorter than 32 characters."),
   spendFocus: z.string().min(1, "Let us know your optimisation focus."),
   notes: z.string().max(1000).optional().or(z.literal("")),
   optIn: z.boolean().refine((value) => value === true, {
@@ -20,15 +16,6 @@ const waitlistSchema = z.object({
 });
 
 type WaitlistPayload = z.infer<typeof waitlistSchema>;
-
-function normalizePhone(phone: string) {
-  const trimmed = phone.trim();
-  if (!trimmed.startsWith("+")) {
-    const digits = trimmed.replace(/\D/g, "");
-    return digits ? `+${digits}` : trimmed;
-  }
-  return trimmed.replace(/\s+/g, "");
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -58,10 +45,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const payload: WaitlistPayload = {
-      ...parsed.data,
-      phoneNumber: normalizePhone(parsed.data.phoneNumber),
-    };
+    const payload: WaitlistPayload = parsed.data;
 
     const resendKey = process.env.RESEND_API_KEY;
     const twilioSid = process.env.TWILIO_ACCOUNT_SID;
@@ -124,24 +108,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (twilioSid && twilioToken && twilioFrom) {
-      const client = twilio(twilioSid, twilioToken);
-      tasks.push(
-        client.messages
-          .create({
-            from: twilioFrom,
-            to: payload.phoneNumber,
-            body: `TapRight: Thanks for joining the waitlist, ${payload.fullName}! We'll text you the moment early access opens.`,
-          })
-          .then(() => {
-            smsResult = "sent";
-          })
-          .catch((error: unknown) => {
-            console.error("Failed to send waitlist SMS", error);
-            smsResult = "failed";
-          }),
-      );
-    }
+    // SMS sending removed - phone number field no longer collected
 
     if (supabaseUrl && supabaseServiceKey && supabaseTable) {
       tasks.push(
@@ -156,7 +123,6 @@ export async function POST(request: NextRequest) {
           body: JSON.stringify({
             full_name: payload.fullName,
             email: payload.email,
-            phone: payload.phoneNumber,
             spend_focus: payload.spendFocus,
             notes: payload.notes ?? "",
             opt_in: payload.optIn,
@@ -189,7 +155,6 @@ export async function POST(request: NextRequest) {
             text: [
               `Name: ${payload.fullName}`,
               `Email: ${payload.email}`,
-              `Phone: ${payload.phoneNumber}`,
               `Spend focus: ${payload.spendFocus}`,
               `Notes: ${payload.notes || "—"}`,
               `Opted in: ${payload.optIn ? "Yes" : "No"}`,
@@ -212,7 +177,6 @@ export async function POST(request: NextRequest) {
 
     console.info("New waitlist signup", {
       ...payload,
-      phoneNumber: payload.phoneNumber.replace(/.(?=.{4})/g, "*"),
       timestamp: new Date().toISOString(),
       emailResult,
       smsResult,

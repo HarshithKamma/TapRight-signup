@@ -5,7 +5,6 @@ import { useState } from "react";
 type FormFields = {
   fullName: string;
   email: string;
-  phoneNumber: string;
   spendFocus: string;
   notes: string;
   optIn: boolean;
@@ -18,7 +17,6 @@ type FormErrors = Record<keyof Omit<FormFields, "optIn">, string> & {
 const initialState: FormFields = {
   fullName: "",
   email: "",
-  phoneNumber: "",
   spendFocus: "",
   notes: "",
   optIn: false,
@@ -27,7 +25,6 @@ const initialState: FormFields = {
 const initialErrors: FormErrors = {
   fullName: "",
   email: "",
-  phoneNumber: "",
   spendFocus: "",
   notes: "",
   optIn: "",
@@ -45,11 +42,6 @@ const validators: Record<keyof FormFields, (value: string | boolean) => string> 
       return pattern.test(value.trim())
         ? ""
         : "Enter a valid email address.";
-    },
-    phoneNumber: (value) => {
-      if (typeof value !== "string") return "Add a valid phone number.";
-      const digits = value.replace(/\D/g, "");
-      return digits.length >= 8 ? "" : "Add a valid phone number with country code.";
     },
     spendFocus: (value) =>
       typeof value === "string" && value
@@ -159,60 +151,42 @@ export function WaitlistForm() {
         <h2>Join the TapRight waitlist</h2>
       </div>
       <form onSubmit={handleSubmit} noValidate>
-        <div className={`form-row${errors.fullName ? " invalid" : ""}`}>
-          <label htmlFor="fullName">Full name</label>
-          <input
-            id="fullName"
-            name="fullName"
-            type="text"
-            placeholder="Jordan Lee"
-            value={formState.fullName}
-            onChange={(event) =>
-              handleChange("fullName", event.currentTarget.value)
-            }
-            onBlur={(event) => handleBlur("fullName", event.currentTarget.value)}
-            required
-            autoComplete="name"
-          />
-          <small className="error-message">{errors.fullName}</small>
-        </div>
+        <div className="form-row-horizontal">
+          <div className={`form-row${errors.fullName ? " invalid" : ""}`}>
+            <label htmlFor="fullName">Full name</label>
+            <input
+              id="fullName"
+              name="fullName"
+              type="text"
+              placeholder="Jim Carrey"
+              value={formState.fullName}
+              onChange={(event) =>
+                handleChange("fullName", event.currentTarget.value)
+              }
+              onBlur={(event) => handleBlur("fullName", event.currentTarget.value)}
+              required
+              autoComplete="name"
+            />
+            <small className="error-message">{errors.fullName}</small>
+          </div>
 
-        <div className={`form-row${errors.email ? " invalid" : ""}`}>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="you@example.com"
-            value={formState.email}
-            onChange={(event) =>
-              handleChange("email", event.currentTarget.value)
-            }
-            onBlur={(event) => handleBlur("email", event.currentTarget.value)}
-            required
-            autoComplete="email"
-          />
-          <small className="error-message">{errors.email}</small>
-        </div>
-
-        <div className={`form-row${errors.phoneNumber ? " invalid" : ""}`}>
-          <label htmlFor="phoneNumber">Phone number</label>
-          <input
-            id="phoneNumber"
-            name="phoneNumber"
-            type="tel"
-            placeholder="+1 415 555 0199"
-            value={formState.phoneNumber}
-            onChange={(event) =>
-              handleChange("phoneNumber", event.currentTarget.value)
-            }
-            onBlur={(event) =>
-              handleBlur("phoneNumber", event.currentTarget.value)
-            }
-            required
-            autoComplete="tel"
-          />
-          <small className="error-message">{errors.phoneNumber}</small>
+          <div className={`form-row${errors.email ? " invalid" : ""}`}>
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              value={formState.email}
+              onChange={(event) =>
+                handleChange("email", event.currentTarget.value)
+              }
+              onBlur={(event) => handleBlur("email", event.currentTarget.value)}
+              required
+              autoComplete="email"
+            />
+            <small className="error-message">{errors.email}</small>
+          </div>
         </div>
 
         <div className={`form-row${errors.spendFocus ? " invalid" : ""}`}>
@@ -232,7 +206,8 @@ export function WaitlistForm() {
             <option value="">Where do you optimise?</option>
             <option value="travel">Travel & airlines</option>
             <option value="dining">Dining & entertainment</option>
-            <option value="subscriptions">SaaS & subscriptions</option>
+            <option value="gas">Gas stations</option>
+            <option value="rent">Rent</option>
             <option value="everyday">Everyday cashback</option>
             <option value="other">Other</option>
           </select>
@@ -244,7 +219,7 @@ export function WaitlistForm() {
           <textarea
             id="notes"
             name="notes"
-            rows={3}
+            rows={2}
             placeholder="Tell us about your card setup or goals..."
             value={formState.notes}
             onChange={(event) =>
