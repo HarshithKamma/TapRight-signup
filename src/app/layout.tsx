@@ -16,6 +16,14 @@ export const metadata: Metadata = {
   title: "TapRight — Smart Credit Card Companion",
   description:
     "Join TapRight to discover the smartest credit card mix for your lifestyle, powered by AI-driven insights and real-time rewards tracking.",
+  icons: {
+    icon: [
+      { url: "/icon.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: "/icon.png",
+  },
   openGraph: {
     title: "TapRight — Smart Credit Card Companion",
     description:
