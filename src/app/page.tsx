@@ -55,6 +55,15 @@ export default function Home() {
   const currentScenario = selectedCategory 
     ? categoryScenarios[selectedCategory as keyof typeof categoryScenarios] 
     : null;
+  
+  // Calculate responsive radius based on window width
+  const getRadius = () => {
+    if (typeof window === 'undefined') return 200; // Default during SSR
+    const width = window.innerWidth;
+    if (width < 480) return 90;
+    if (width < 768) return 120;
+    return 200;
+  };
 
   return (
     <>
@@ -173,7 +182,7 @@ export default function Home() {
               </div>
               {categories.map((category, index) => {
                 const angle = (index * 360) / categories.length;
-                const radius = 200;
+                const radius = getRadius();
                 const x = Math.cos((angle - 90) * Math.PI / 180) * radius;
                 const y = Math.sin((angle - 90) * Math.PI / 180) * radius;
                 const isActive = selectedCategory === category.id;

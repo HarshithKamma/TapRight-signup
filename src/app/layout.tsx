@@ -28,14 +28,24 @@ export const metadata: Metadata = {
     title: "TapRight — Smart Credit Card Companion",
     description:
       "Secure your early access to TapRight and never miss rewards, cashback, or travel perks again.",
-    url: "https://tapright.ai",
+    url: "https://tapright.app",
     siteName: "TapRight",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 1200,
+        alt: "TapRight Logo",
+      },
+    ],
+    type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "TapRight — Smart Credit Card Companion",
     description:
       "TapRight analyses your spending to recommend the ideal cards and optimise your rewards.",
+    images: ["/twitter-image.png"],
   },
 };
 

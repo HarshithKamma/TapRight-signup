@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
       tasks.push(
         resend.emails
           .send({
-            from: "TapRight Waitlist <info@tapright.app>",
+            from: "TapRight <info@tapright.app>",
             to: payload.email,
             subject: "You're on the TapRight waitlist ✅",
             text: [
@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
       tasks.push(
         resend.emails
           .send({
-            from: "TapRight Waitlist <info@tapright.app>",
+            from: "TapRight <info@tapright.app>",
             to: alertEmail,
             subject: `New waitlist signup — ${payload.fullName}`,
             text: [
