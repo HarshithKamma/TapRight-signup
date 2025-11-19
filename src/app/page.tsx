@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { WaitlistForm } from "@/components/WaitlistForm";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const categoryScenarios = {
   all: {
@@ -47,6 +47,24 @@ const categories = [
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [radius, setRadius] = useState<number>(200);
+  
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const updateRadius = () => {
+      if (typeof window === 'undefined') return;
+      const width = window.innerWidth;
+      if (width < 480) setRadius(85);
+      else if (width < 600) setRadius(95);
+      else if (width < 768) setRadius(120);
+      else setRadius(200);
+    };
+    
+    updateRadius();
+    window.addEventListener('resize', updateRadius);
+    return () => window.removeEventListener('resize', updateRadius);
+  }, []);
   
   const handleCategoryClick = (categoryId: string) => {
     setSelectedCategory(selectedCategory === categoryId ? null : categoryId);
@@ -55,15 +73,6 @@ export default function Home() {
   const currentScenario = selectedCategory 
     ? categoryScenarios[selectedCategory as keyof typeof categoryScenarios] 
     : null;
-  
-  // Calculate responsive radius based on window width
-  const getRadius = () => {
-    if (typeof window === 'undefined') return 200; // Default during SSR
-    const width = window.innerWidth;
-    if (width < 480) return 140;
-    if (width < 768) return 170;
-    return 200;
-  };
 
   return (
     <>
@@ -182,11 +191,9 @@ export default function Home() {
               </div>
               {categories.map((category, index) => {
                 const angle = (index * 360) / categories.length;
-                const radius = getRadius();
                 const x = Math.cos((angle - 90) * Math.PI / 180) * radius;
                 const y = Math.sin((angle - 90) * Math.PI / 180) * radius;
                 const isActive = selectedCategory === category.id;
-                const showTooltip = isActive && currentScenario;
                 
                 // Determine tooltip position based on button position
                 const tooltipPosition = angle >= 45 && angle < 135 ? 'right' : 
@@ -211,7 +218,7 @@ export default function Home() {
                       <div className="category-button-icon">{category.icon}</div>
                       <div className="category-button-label">{category.label}</div>
                     </button>
-                    {showTooltip && (
+                    {isActive && currentScenario && (
                       <div className={`scenario-tooltip scenario-tooltip-${tooltipPosition} animation`}>
                         <p className="scenario-text">{currentScenario.scenario}</p>
                         <p className="scenario-example">{currentScenario.example}</p>
@@ -221,7 +228,13 @@ export default function Home() {
                 );
               })}
             </div>
-
+            {/* Mobile tooltip - rendered outside category circle */}
+            {currentScenario && selectedCategory && (
+              <div key={selectedCategory} className="scenario-tooltip-mobile animation">
+                <p className="scenario-text">{currentScenario.scenario}</p>
+                <p className="scenario-example">{currentScenario.example}</p>
+              </div>
+            )}
           </div>
         </section>
 
