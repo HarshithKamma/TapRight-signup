@@ -392,7 +392,7 @@ export default function Home() {
             <p className="footer-tagline">
               Maximize your credit card rewards effortlessly. Instantly know which card earns the highest cashback at every store.
             </p>
-            <p className="footer-copyright">© {new Date().getFullYear()} TapRight. All rights reserved.</p>
+            <p className="footer-copyright">© 2025 TapRight. All rights reserved.</p>
           </div>
           <div className="footer-links">
             <div className="footer-column">
