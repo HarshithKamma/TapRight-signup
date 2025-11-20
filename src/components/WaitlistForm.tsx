@@ -144,21 +144,16 @@ export function WaitlistForm() {
   };
 
   return (
-    <div className="hero-form-card" id="waitlist">
-      <div className="form-card-header">
-        <span className="status-dot" />
-        <p>Beta is invite-only. Claim early access.</p>
-        <h2>Join the TapRight waitlist</h2>
-      </div>
+    <div className="hero-form-card">
       <form onSubmit={handleSubmit} noValidate>
         <div className="form-row-horizontal">
           <div className={`form-row${errors.fullName ? " invalid" : ""}`}>
-            <label htmlFor="fullName">Full name</label>
+            <label htmlFor="fullName">Full Name</label>
             <input
               id="fullName"
               name="fullName"
               type="text"
-              placeholder="Jim Carrey"
+              placeholder=""
               value={formState.fullName}
               onChange={(event) =>
                 handleChange("fullName", event.currentTarget.value)
@@ -176,7 +171,7 @@ export function WaitlistForm() {
               id="email"
               name="email"
               type="email"
-              placeholder="you@example.com"
+              placeholder=""
               value={formState.email}
               onChange={(event) =>
                 handleChange("email", event.currentTarget.value)
@@ -190,7 +185,7 @@ export function WaitlistForm() {
         </div>
 
         <div className={`form-row${errors.spendFocus ? " invalid" : ""}`}>
-          <label htmlFor="spendFocus">Primary spend focus</label>
+          <label htmlFor="spendFocus">Primary Spend Focus</label>
           <select
             id="spendFocus"
             name="spendFocus"
@@ -203,7 +198,7 @@ export function WaitlistForm() {
             }
             required
           >
-            <option value="">Where do you optimise?</option>
+            <option value="">Where do you optimize?</option>
             <option value="travel">Travel & airlines</option>
             <option value="dining">Dining & entertainment</option>
             <option value="gas">Gas stations</option>
@@ -219,8 +214,8 @@ export function WaitlistForm() {
           <textarea
             id="notes"
             name="notes"
-            rows={2}
-            placeholder="Tell us about your card setup or goals..."
+            rows={4}
+            placeholder=""
             value={formState.notes}
             onChange={(event) =>
               handleChange("notes", event.currentTarget.value)
@@ -251,7 +246,7 @@ export function WaitlistForm() {
         </div>
 
         <button type="submit" className="primary-btn" disabled={disableSubmit}>
-          {disableSubmit ? "Joining..." : "Join waitlist"}
+          {disableSubmit ? "Joining..." : "Join Waitlist"}
         </button>
 
         <p className="form-footnote">
