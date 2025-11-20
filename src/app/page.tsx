@@ -52,6 +52,33 @@ const categories = [
   { id: "other", label: "Everything Else", icon: "✨" }
 ];
 
+const heroScenarios = [
+  {
+    icon: "☕️",
+    location: "Starbucks",
+    card: "Amex Gold",
+    reward: "4x Points",
+    cardNumber: "4291",
+    highlightColor: "#FFE066",
+  },
+  {
+    icon: "🛒",
+    location: "Whole Foods",
+    card: "Amex Blue Cash",
+    reward: "6% Cashback",
+    cardNumber: "1184",
+    highlightColor: "#C3F4D6",
+  },
+  {
+    icon: "✈️",
+    location: "Delta Terminal",
+    card: "Chase Sapphire",
+    reward: "3x Miles",
+    cardNumber: "7780",
+    highlightColor: "#B5D9FF",
+  },
+];
+
 const faqs = [
   {
     question: "How does TapRight protect my privacy?",
@@ -78,7 +105,15 @@ const faqs = [
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [activeScenarioIndex, setActiveScenarioIndex] = useState(0);
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveScenarioIndex((prev) => (prev + 1) % heroScenarios.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -141,37 +176,68 @@ export default function Home() {
             </div>
             <div className="hero-animation">
               <div className="card-tap-animation">
-                <div className="payment-terminal">
-                  <div className="terminal-screen"></div>
-                  <div className="terminal-base"></div>
-                </div>
-                <div className="credit-card-tapping">
-                  <div className="credit-card">
-                    <div className="card-chip"></div>
-                    <div className="card-number">**** **** **** 4532</div>
-                    <div className="card-name">JOHN DOE</div>
-                    <div className="card-logo">VISA</div>
-                  </div>
-                </div>
+                {/* Payment Terminal SVG - BIGGER */}
+                <svg className="payment-terminal" width="200" height="260" viewBox="0 0 200 260" fill="none">
+                  <defs>
+                    <linearGradient id="terminalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#f8f9fa" />
+                      <stop offset="100%" stopColor="#e9ecef" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="15" y="15" width="170" height="230" rx="16" fill="url(#terminalGrad)" stroke="#dee2e6" strokeWidth="3"/>
+                  <rect x="35" y="35" width="130" height="80" rx="8" fill="#2d3748" stroke="#4a5568" strokeWidth="3"/>
+                  <circle cx="100" cy="160" r="38" fill="#00B376" opacity="0">
+                    <animate attributeName="opacity" values="0;0;0;0.3;0.5;0.3;0" dur="5s" repeatCount="indefinite"/>
+                  </circle>
+                  <path d="M 80 160 L 95 175 L 120 145" stroke="white" strokeWidth="5" strokeLinecap="round" fill="none" opacity="0">
+                    <animate attributeName="opacity" values="0;0;0;0;1;1;0" dur="5s" repeatCount="indefinite"/>
+                  </path>
+                </svg>
+
+                {/* Credit Card SVG - SMALLER */}
+                <svg className="credit-card-tapping" width="180" height="110" viewBox="0 0 180 110" fill="none">
+                  <defs>
+                    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#1e3a5f" />
+                      <stop offset="100%" stopColor="#0f1f38" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="5" y="5" width="170" height="100" rx="10" fill="url(#cardGrad)" stroke="#2d4a6f" strokeWidth="2"/>
+                  <rect x="15" y="22" width="32" height="24" rx="3" fill="#ffd700" opacity="0.9"/>
+                  <text x="15" y="70" fill="white" fontSize="11" fontFamily="monospace" letterSpacing="1.5">**** ****</text>
+                  <text x="15" y="88" fill="white" fontSize="14" fontFamily="monospace" fontWeight="600" letterSpacing="1.5">**** 4291</text>
+                  <text x="145" y="88" fill="white" fontSize="13" fontFamily="sans-serif" fontWeight="700">VISA</text>
+                </svg>
+
+                {/* Money Flying */}
                 <div className="money-flow">
-                  <div className="money-cash cash-1">💵</div>
-                  <div className="money-cash cash-2">💵</div>
-                  <div className="money-cash cash-3">💵</div>
-                  <div className="money-coin coin-1">🪙</div>
-                  <div className="money-coin coin-2">🪙</div>
+                  <svg className="reward-icon reward-1" width="28" height="28" viewBox="0 0 28 28" fill="none">
+                    <circle cx="14" cy="14" r="12" fill="#00B376"/>
+                    <text x="14" y="18" textAnchor="middle" fill="white" fontSize="14" fontWeight="700">$</text>
+                  </svg>
+                  <svg className="reward-icon reward-2" width="28" height="28" viewBox="0 0 28 28" fill="none">
+                    <circle cx="14" cy="14" r="12" fill="#0074A6"/>
+                    <text x="14" y="18" textAnchor="middle" fill="white" fontSize="14" fontWeight="700">$</text>
+                  </svg>
+                  <svg className="reward-icon reward-3" width="28" height="28" viewBox="0 0 28 28" fill="none">
+                    <circle cx="14" cy="14" r="12" fill="#00B376"/>
+                    <text x="14" y="18" textAnchor="middle" fill="white" fontSize="14" fontWeight="700">$</text>
+                  </svg>
                 </div>
-                <div className="wallet">
-                  <div className="wallet-body">
-                    <div className="wallet-coins">
-                      <div className="wallet-coin wallet-coin-1">🪙</div>
-                      <div className="wallet-coin wallet-coin-2">🪙</div>
-                      <div className="wallet-coin wallet-coin-3">🪙</div>
-                    </div>
-                  </div>
-                  <div className="wallet-flap">
-                    <div className="wallet-button"></div>
-                  </div>
-                </div>
+
+                {/* Wallet SVG */}
+                <svg className="wallet-icon" width="110" height="90" viewBox="0 0 110 90" fill="none">
+                  <defs>
+                    <linearGradient id="walletGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#9333ea" />
+                      <stop offset="100%" stopColor="#7c3aed" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="5" y="25" width="100" height="60" rx="8" fill="url(#walletGrad)"/>
+                  <rect x="5" y="15" width="100" height="15" rx="6" fill="#6b21a8"/>
+                  <circle cx="85" cy="55" r="8" fill="white" opacity="0.9"/>
+                  <circle cx="85" cy="55" r="4" fill="#6b21a8"/>
+                </svg>
               </div>
             </div>
           </div>
