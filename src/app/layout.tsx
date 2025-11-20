@@ -6,6 +6,7 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -14,11 +15,13 @@ export const metadata: Metadata = {
     "Join TapRight to discover the smartest credit card mix for your lifestyle, powered by AI-driven insights and real-time rewards tracking.",
   icons: {
     icon: [
-      { url: "/icon.png", sizes: "32x32", type: "image/png" },
-      { url: "/icon.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon.png", sizes: "512x512", type: "image/png" },
+      { url: "/tapright-final-logo.png", sizes: "16x16", type: "image/png" },
+      { url: "/tapright-final-logo.png", sizes: "32x32", type: "image/png" },
+      { url: "/tapright-final-logo.png", sizes: "192x192", type: "image/png" },
+      { url: "/tapright-final-logo.png", sizes: "512x512", type: "image/png" },
     ],
-    apple: "/icon.png",
+    apple: "/tapright-final-logo.png",
+    shortcut: "/tapright-final-logo.png",
   },
   openGraph: {
     title: "TapRight — Smart Credit Card Companion",
@@ -57,7 +60,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.className}>
       <body
         className={`${inter.variable} antialiased`}
       >

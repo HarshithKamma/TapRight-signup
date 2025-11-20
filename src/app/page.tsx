@@ -70,18 +70,14 @@ const faqs = [
     answer: "Our recommendations are based on real-time merchant data and the latest reward rates from credit card issuers. We update our database regularly to ensure accuracy."
   },
   {
-    question: "Is TapRight free to use?",
-    answer: "Yes, TapRight is completely free to use. There are no subscription fees or hidden costs."
-  },
-  {
     question: "When will TapRight be available?",
     answer: "TapRight is currently in beta. Join our waitlist to get early access when we launch."
   }
 ];
 
 export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>("groceries");
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
@@ -282,7 +278,7 @@ export default function Home() {
           </div>
           
           {currentScenario && (
-            <div className="card-recommendation">
+            <div key={selectedCategory} className="card-recommendation">
               <div className="card-icon">💳</div>
               <div className="card-info">
                 <h3 className="card-name">{currentScenario.cardName}</h3>
@@ -302,10 +298,10 @@ export default function Home() {
           <div className="table-header">
             <div className="table-cell">Category</div>
             <div className="table-cell">
-              <span>× Without TapRight</span>
+              <span><span className="cross-symbol">×</span> Without TapRight</span>
             </div>
             <div className="table-cell">
-              <span>✓ With TapRight</span>
+              <span><span className="check-symbol">✓</span> With TapRight</span>
             </div>
             <div className="table-cell">Increase</div>
           </div>
@@ -313,37 +309,37 @@ export default function Home() {
             <div className="table-cell" data-label="Category">Dining Out</div>
             <div className="table-cell" data-label="Without TapRight">$24</div>
             <div className="table-cell highlight" data-label="With TapRight">$42</div>
-            <div className="table-cell highlight" data-label="Increase">+75%</div>
+            <div className="table-cell highlight" data-label="Increase"><span className="increase-badge">+75%</span></div>
           </div>
           <div className="table-row">
             <div className="table-cell" data-label="Category">Travel & Hotels</div>
             <div className="table-cell" data-label="Without TapRight">$31</div>
             <div className="table-cell highlight" data-label="With TapRight">$62</div>
-            <div className="table-cell highlight" data-label="Increase">+100%</div>
+            <div className="table-cell highlight" data-label="Increase"><span className="increase-badge">+100%</span></div>
           </div>
           <div className="table-row">
             <div className="table-cell" data-label="Category">Gas Stations</div>
             <div className="table-cell" data-label="Without TapRight">$18</div>
             <div className="table-cell highlight" data-label="With TapRight">$30</div>
-            <div className="table-cell highlight" data-label="Increase">+67%</div>
+            <div className="table-cell highlight" data-label="Increase"><span className="increase-badge">+67%</span></div>
           </div>
           <div className="table-row">
             <div className="table-cell" data-label="Category">Groceries</div>
             <div className="table-cell" data-label="Without TapRight">$36</div>
             <div className="table-cell highlight" data-label="With TapRight">$72</div>
-            <div className="table-cell highlight" data-label="Increase">+100%</div>
+            <div className="table-cell highlight" data-label="Increase"><span className="increase-badge">+100%</span></div>
           </div>
           <div className="table-row">
             <div className="table-cell" data-label="Category">Everything Else</div>
             <div className="table-cell" data-label="Without TapRight">$21</div>
             <div className="table-cell highlight" data-label="With TapRight">$32</div>
-            <div className="table-cell highlight" data-label="Increase">+52%</div>
+            <div className="table-cell highlight" data-label="Increase"><span className="increase-badge">+52%</span></div>
           </div>
           <div className="table-row total">
             <div className="table-cell" data-label="Category">Monthly Total</div>
             <div className="table-cell" data-label="Without TapRight">$130</div>
             <div className="table-cell highlight" data-label="With TapRight">$238</div>
-            <div className="table-cell highlight" data-label="Increase">+83%</div>
+            <div className="table-cell highlight" data-label="Increase"><span className="increase-badge total-badge">+83%</span></div>
           </div>
         </div>
         <p className="comparison-disclaimer">Based on average cashback rates. Actual earnings may vary by card and merchant.</p>
@@ -388,8 +384,8 @@ export default function Home() {
               <Image
                 src="/tapright-final-logo.png"
                 alt="TapRight logo"
-                width={40}
-                height={40}
+                width={32}
+                height={32}
               />
               <span className="footer-brand-name">TapRight</span>
             </div>

@@ -184,44 +184,46 @@ export function WaitlistForm() {
           </div>
         </div>
 
-        <div className={`form-row${errors.spendFocus ? " invalid" : ""}`}>
-          <label htmlFor="spendFocus">Primary Spend Focus</label>
-          <select
-            id="spendFocus"
-            name="spendFocus"
-            value={formState.spendFocus}
-            onChange={(event) =>
-              handleChange("spendFocus", event.currentTarget.value)
-            }
-            onBlur={(event) =>
-              handleBlur("spendFocus", event.currentTarget.value)
-            }
-            required
-          >
-            <option value="">Where do you optimize?</option>
-            <option value="travel">Travel & airlines</option>
-            <option value="dining">Dining & entertainment</option>
-            <option value="gas">Gas stations</option>
-            <option value="rent">Rent</option>
-            <option value="everyday">Everyday cashback</option>
-            <option value="other">Other</option>
-          </select>
-          <small className="error-message">{errors.spendFocus}</small>
-        </div>
+        <div className="form-row-horizontal">
+          <div className={`form-row${errors.spendFocus ? " invalid" : ""}`}>
+            <label htmlFor="spendFocus">Primary Spend Focus</label>
+            <select
+              id="spendFocus"
+              name="spendFocus"
+              value={formState.spendFocus}
+              onChange={(event) =>
+                handleChange("spendFocus", event.currentTarget.value)
+              }
+              onBlur={(event) =>
+                handleBlur("spendFocus", event.currentTarget.value)
+              }
+              required
+            >
+              <option value="">Where do you optimize?</option>
+              <option value="travel">Travel & airlines</option>
+              <option value="dining">Dining & entertainment</option>
+              <option value="gas">Gas stations</option>
+              <option value="rent">Rent</option>
+              <option value="everyday">Everyday cashback</option>
+              <option value="other">Other</option>
+            </select>
+            <small className="error-message">{errors.spendFocus}</small>
+          </div>
 
-        <div className="form-row">
-          <label htmlFor="notes">What would make TapRight a must-have?</label>
-          <textarea
-            id="notes"
-            name="notes"
-            rows={4}
-            placeholder=""
-            value={formState.notes}
-            onChange={(event) =>
-              handleChange("notes", event.currentTarget.value)
-            }
-          />
-          <small className="error-message">{errors.notes}</small>
+          <div className="form-row">
+            <label htmlFor="notes">What would make TapRight a must-have?</label>
+            <textarea
+              id="notes"
+              name="notes"
+              rows={3}
+              placeholder=""
+              value={formState.notes}
+              onChange={(event) =>
+                handleChange("notes", event.currentTarget.value)
+              }
+            />
+            <small className="error-message">{errors.notes}</small>
+          </div>
         </div>
 
         <div className={`form-row checkbox-row${errors.optIn ? " invalid" : ""}`}>
