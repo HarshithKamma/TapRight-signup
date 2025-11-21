@@ -270,4 +270,3 @@ export function WaitlistForm() {
     </div>
   );
 }
-
