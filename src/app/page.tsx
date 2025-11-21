@@ -158,6 +158,10 @@ export default function Home() {
         <div className="hero-container">
           <div className="hero-content">
             <div className="hero-text">
+              <div className="launching-soon-badge">
+                <span className="badge-dot"></span>
+                LAUNCHING SOON
+              </div>
               <h1 className="hero-headline">
                 Maximize your credit card rewards <span className="highlight">effortlessly</span>
               </h1>

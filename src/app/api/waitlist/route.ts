@@ -68,6 +68,51 @@ export async function POST(request: NextRequest) {
     let supabaseResult: "synced" | "skipped" | "failed" = "skipped";
     let alertResult: "sent" | "skipped" | "failed" = "skipped";
 
+    // Check for duplicate email FIRST before sending any emails
+    if (supabaseUrl && supabaseServiceKey && supabaseTable) {
+      try {
+        const supabaseResponse = await fetch(`${supabaseUrl.replace(/\/$/, "")}/rest/v1/${encodeURIComponent(supabaseTable)}`, {
+          method: "POST",
+          headers: {
+            apikey: supabaseServiceKey,
+            Authorization: `Bearer ${supabaseServiceKey}`,
+            "Content-Type": "application/json",
+            Prefer: "return=minimal",
+          },
+          body: JSON.stringify({
+            full_name: payload.fullName,
+            email: payload.email,
+            spend_focus: payload.spendFocus,
+            notes: payload.notes ?? "",
+            opt_in: payload.optIn,
+            joined_at: new Date().toISOString(),
+          }),
+        });
+
+        if (!supabaseResponse.ok) {
+          const errorText = await supabaseResponse.text();
+          
+          // Check if it's a duplicate email error
+          if (errorText.includes("duplicate key") || errorText.includes("unique constraint")) {
+            return NextResponse.json(
+              {
+                message: "Good news—you're already on the waitlist! Check your email for confirmation.",
+              },
+              { status: 400 },
+            );
+          }
+          
+          throw new Error(errorText || `Supabase sync failed with status ${supabaseResponse.status}`);
+        }
+        
+        supabaseResult = "synced";
+      } catch (error: unknown) {
+        console.error("Failed to sync waitlist to Supabase", error);
+        supabaseResult = "failed";
+      }
+    }
+
+    // Only send emails if the signup was successful (not a duplicate)
     const tasks: Array<Promise<void>> = [];
 
     if (resendKey) {
@@ -82,10 +127,10 @@ export async function POST(request: NextRequest) {
               `Hi ${payload.fullName.split(" ")[0] || "there"},`,
               "",
               "Thanks for joining the TapRight early access list.",
-              "We’re building the fastest way to decide which credit card earns the most for every purchase you make.",
+              "We're building the fastest way to decide which credit card earns the most for every purchase you make.",
               "",
-              "What’s next?",
-              "• We’ll review your details and prioritise access as we open up beta cohorts.",
+              "What's next?",
+              "• We'll review your details and prioritise access as we open up beta cohorts.",
               "• Expect a deeper onboarding guide soon—tailored to your card goals.",
               "",
               "In the meantime, feel free to reply to this email with any specific challenges you want TapRight to solve.",
@@ -105,40 +150,6 @@ export async function POST(request: NextRequest) {
     }
 
     // SMS sending removed - phone number field no longer collected
-
-    if (supabaseUrl && supabaseServiceKey && supabaseTable) {
-      tasks.push(
-        fetch(`${supabaseUrl.replace(/\/$/, "")}/rest/v1/${encodeURIComponent(supabaseTable)}`, {
-          method: "POST",
-          headers: {
-            apikey: supabaseServiceKey,
-            Authorization: `Bearer ${supabaseServiceKey}`,
-            "Content-Type": "application/json",
-            Prefer: "return=minimal",
-          },
-          body: JSON.stringify({
-            full_name: payload.fullName,
-            email: payload.email,
-            spend_focus: payload.spendFocus,
-            notes: payload.notes ?? "",
-            opt_in: payload.optIn,
-            joined_at: new Date().toISOString(),
-          }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              return response.text().then((text) => {
-                throw new Error(text || `Supabase sync failed with status ${response.status}`);
-              });
-            }
-            supabaseResult = "synced";
-          })
-          .catch((error: unknown) => {
-            console.error("Failed to sync waitlist to Supabase", error);
-            supabaseResult = "failed";
-          }),
-      );
-    }
 
     if (resendKey && alertEmail) {
       const resend = new Resend(resendKey);
