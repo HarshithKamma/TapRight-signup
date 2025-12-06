@@ -71,7 +71,7 @@ const faqs = [
   },
   {
     question: "When will TapRight be available?",
-    answer: "We are scheduled to launch on December 8th. We encourage you to join our waitlist to secure early access to the application upon release."
+    answer: "The app is currently in beta testing. We are scheduled for our official launch on January 1st, 2026. We encourage you to join the waitlist to secure early access to the TapRight App."
   }
 ];
 
