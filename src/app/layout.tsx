@@ -15,13 +15,11 @@ export const metadata: Metadata = {
     "Join TapRight to discover the smartest credit card mix for your lifestyle, powered by insights and real-time rewards tracking.",
   icons: {
     icon: [
-      { url: "/tapright-favicon.png", sizes: "16x16", type: "image/png" },
-      { url: "/tapright-favicon.png", sizes: "32x32", type: "image/png" },
-      { url: "/tapright-favicon.png", sizes: "192x192", type: "image/png" },
-      { url: "/tapright-favicon.png", sizes: "512x512", type: "image/png" },
+      { url: "/favicon.ico" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
     ],
-    apple: "/tapright-favicon.png",
-    shortcut: "/tapright-favicon.png",
+    apple: { url: "/apple-touch-icon.png", sizes: "180x180" },
+    shortcut: "/favicon.ico",
   },
   openGraph: {
     title: "TapRight — Smart Credit Card Companion",
